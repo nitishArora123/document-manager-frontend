@@ -53,6 +53,12 @@ var documentManager = {
 			"name":  "download",
 			"label": "Download",
 			"view" : "download"
+		},
+		{
+			"type": "file",
+			"name": "filelink",
+			"label": "File Link",
+			"view": "filelink"
 		}
 		
 	],

@@ -1403,6 +1403,8 @@ JetList.prototype.renderList = function() {
 								//renderFun = _this.renderThumbnailView;
 								 columnDefs[colDefCtr] = {
 				        		   'render': function (data, type, row, meta){
+									   console.log(data)
+									   console.log(row)
 				        		        return _this.renderThumbnailView(data, type, row, meta);
 				        		    }
 								}
@@ -1438,6 +1440,8 @@ JetList.prototype.renderList = function() {
 								//renderFun = _this.renderFolderView;
 								columnDefs[colDefCtr] = {
 				        		    'render': function (data, type, row, meta){
+										 console.log(data)
+									   console.log(row)
 				        		        return _this.renderFolderView(data, type, row, meta);
 				        		    }
 								}
@@ -1522,7 +1526,8 @@ JetList.prototype.renderThumbnailView = function(data, type, row, meta) {
 JetList.prototype.renderDownloadView = function(data, type, row, meta) {
 	console.log(row)
 	console.log(data)
-	  return "<a href='" + row.name + "' download><i class='fa fa-cloud-download' aria-hidden='true'></i></a>";
+	var download = 'http://localhost:9000/api/v1/folder/download/' + row.id
+	  return "<a href='" + download + "' download><i class='fa fa-cloud-download' aria-hidden='true'></i></a>";
 }
 
 JetList.prototype.renderFolderView = function(data, type, row, meta) {
@@ -1537,17 +1542,22 @@ JetList.prototype.renderFolderView = function(data, type, row, meta) {
 	href = formatMessage(href, param);
 	href = appendQueryParam(href, param);
 	//console.log(href);
-	return "<a href='" + href + "' style='cursor: pointer;' target='_blank'><i class='fa fa-folder-o' aria-hidden='true'></i></a>&nbsp;" + data;
+	return "<a href='" + href + "' style='cursor: pointer;'><i class='fa fa-folder-o' aria-hidden='true'></i></a>&nbsp;" + data;
 }
 
 JetList.prototype.renderFileLinkView = function(data, type, row, meta) {
+	console.log(data)
 	console.log(row);
-	var fileName=(data.lastIndexOf("/")>=0? data.substring(data.lastIndexOf("/")+1): data);
+	var file = row.systemPath;
+	var fileName=(file.lastIndexOf("/")>=0? file.substring(file.lastIndexOf("/")+1): file);
+	console.log(fileName);
 	fileName=(fileName.lastIndexOf("\\")>=0? fileName.substring(fileName.lastIndexOf("\\")+1): fileName);
+	console.log(fileName);
 	var extn=fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
-	var icon=getFaFileIcon("extn");
+	console.log(extn);
+	var icon=getFaFileIcon(extn);
 	
-	return "<a href='"+data+"' target='' style='text-decoration:none;'><i class='fa "+icon+"' aria-hidden='true'></i>&nbsp;"+row.name+"</a>";
+	return "<a href='"+row.systemPath+"' target='' style='text-decoration:none;'><i class='fa "+icon+"' aria-hidden='true'></i>&nbsp;"+fileName+"</a>";
 }
 
 JetList.prototype.renderRowActions = function(data) {
@@ -2027,6 +2037,7 @@ function setDataKey(form, value){
 }
 
 function getFaFileIcon(extn){
+	//alert('worked');
 	var icon = 'fa-file-o';
 	if(extn == ".pdf"){
 		icon = 'fa-file-pdf-o';
